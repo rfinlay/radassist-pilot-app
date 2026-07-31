@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>RadAssist — CT Cardiac Calcium Score</title>
+  <meta name="description" content="Local, privacy-first CT cardiac calcium score report generator with MESA CAC percentile." />
+  <!-- No external resources: the app must make zero network calls (system
+       font stack in styles.css). -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site">
+    <div class="brandrow">
+      <div class="mark" aria-hidden="true">R</div>
+      <div>
+        <div class="name">RadAssist</div>
+        <h1 class="serif">CT Cardiac Calcium Score</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <!-- INPUT -->
+      <section class="card" aria-labelledby="input-h">
+        <p class="eyebrow">Inputs</p>
+        <h2 id="input-h">Scores &amp; demographics</h2>
+
+        <form id="calc-form" novalidate>
+          <fieldset>
+            <legend>Per-vessel Agatston (AJ-130)</legend>
+            <div class="vessels">
+              <div class="field">
+                <label for="leftMain">Left Main</label>
+                <input type="number" id="leftMain" name="leftMain" min="0" step="1" inputmode="numeric" placeholder="0" />
+              </div>
+              <div class="field">
+                <label for="lad">LAD</label>
+                <input type="number" id="lad" name="lad" min="0" step="1" inputmode="numeric" placeholder="0" />
+              </div>
+              <div class="field">
+                <label for="lcx">LCx</label>
+                <input type="number" id="lcx" name="lcx" min="0" step="1" inputmode="numeric" placeholder="0" />
+              </div>
+              <div class="field">
+                <label for="rca">RCA</label>
+                <input type="number" id="rca" name="rca" min="0" step="1" inputmode="numeric" placeholder="0" />
+              </div>
+            </div>
+            <div class="field" style="margin-top:10px">
+              <label for="totalOverride">Total override
+                <span class="hint">— optional; leave blank to sum the four vessels</span>
+              </label>
+              <input type="number" id="totalOverride" name="totalOverride" min="0" step="1" inputmode="numeric" placeholder="auto-sum" />
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Patient demographics <span class="hint" style="text-transform:none;font-weight:400">(no identifiers)</span></legend>
+            <div class="demo3">
+              <div class="field">
+                <label for="age">Age <span class="hint">45–84</span></label>
+                <input type="number" id="age" name="age" min="45" max="84" step="1" inputmode="numeric" placeholder="e.g. 65" />
+              </div>
+              <div class="field">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="ethnicity">Race / Ethnicity <span class="hint">(MESA categories)</span></label>
+              <select id="ethnicity" name="ethnicity">
+                <option value="white">White</option>
+                <option value="black">African-American</option>
+                <option value="hispanic">Hispanic</option>
+                <option value="chinese">Chinese</option>
+              </select>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Optional report fields</legend>
+            <div class="field">
+              <label for="other">OTHER — incidental non-cardiac findings</label>
+              <textarea id="other" name="other" rows="2" placeholder="No significant non-cardiac findings."></textarea>
+            </div>
+          </fieldset>
+
+          <button class="btn" type="submit" id="generate">Generate report</button>
+          <div id="form-msg" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <!-- OUTPUT -->
+      <section class="card" aria-labelledby="out-h">
+        <p class="eyebrow">Result</p>
+        <h2 id="out-h">Report</h2>
+
+        <div id="results" hidden>
+          <div class="results-head">
+            <div class="stat">
+              <div class="num" id="stat-total">—</div>
+              <div class="lbl">Total aggregate<br />Agatston score</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="stat-pct">—</div>
+              <div class="lbl">MESA percentile<br />(age / sex / ethnicity)</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="stat-prob">—</div>
+              <div class="lbl">Est. probability of<br />non-zero CAC</div>
+            </div>
+          </div>
+
+          <div id="result-msg" aria-live="polite"></div>
+
+          <div class="report-tools">
+            <button class="btn secondary" type="button" id="copy-btn">Copy report</button>
+            <span class="status" id="copy-status" role="status"></span>
+          </div>
+          <textarea class="report" id="report-text" readonly aria-label="Generated report"></textarea>
+        </div>
+
+        <div id="placeholder" class="placeholder">
+          Enter the vessel scores and demographics, then <strong>Generate report</strong>.
+        </div>
+      </section>
+    </div>
+
+    <!-- FEEDBACK -->
+    <section class="card feedback" aria-labelledby="fb-h">
+      <details id="fb-details">
+        <summary>
+          <span class="eyebrow" style="margin:0">Feedback</span>
+          <span class="fb-title serif" id="fb-h">Help improve RadAssist</span>
+        </summary>
+
+        <p class="fb-intro">Help improve RadAssist — your notes go straight to Rick.</p>
+        <p class="fb-phi">Notes only, please — don't include any patient information.</p>
+
+        <div class="field">
+          <label for="fb-worked">What worked well?</label>
+          <textarea id="fb-worked" rows="2" maxlength="800"></textarea>
+        </div>
+        <div class="field">
+          <label for="fb-wrong">What was wrong or off in the report?</label>
+          <textarea id="fb-wrong" rows="2" maxlength="800"></textarea>
+        </div>
+        <div class="field">
+          <label for="fb-missing">What's missing / what would save you the most time?</label>
+          <textarea id="fb-missing" rows="2" maxlength="800"></textarea>
+        </div>
+        <div class="field">
+          <label for="fb-priority">Overall priority for the next build</label>
+          <textarea id="fb-priority" rows="2" maxlength="800"></textarea>
+        </div>
+        <div class="field fb-name">
+          <label for="fb-name">Your name <span class="hint">(optional)</span></label>
+          <input type="text" id="fb-name" autocomplete="off" maxlength="100" />
+        </div>
+
+        <div class="fb-actions">
+          <button class="btn secondary" type="button" id="fb-copy">Copy feedback</button>
+          <a class="btn secondary" id="fb-email" href="#">Email to Rick</a>
+          <button class="btn secondary" type="button" id="fb-download">Download (.txt)</button>
+          <span class="status" id="fb-status" role="status"></span>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site">
+    <span class="privacy">● Local &amp; private</span>
+    <p style="margin:10px 0 0">
+      All calculations run entirely in your browser. The app itself transmits
+      nothing: no patient data, scores, demographics, or report content ever
+      leaves this machine. The only exception is the feedback text you type
+      yourself, sent only when you click <strong>Email to Rick</strong> — which
+      simply opens your own mail client. MESA percentile per
+      <strong>McClelland RL et al., Circulation 2006;113(1):30-37</strong>.
+      Boilerplate TECHNIQUE/BACKGROUND wording is draft pending the client's
+      exact template text.
+    </p>
+  </footer>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

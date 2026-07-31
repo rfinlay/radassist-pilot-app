@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>RadAssist — Testing & Training Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#eef3f8;--card:#fff;--ink:#16232f;--muted:#5a6b7a;--navy:#0f3a5f;--navy-d:#0a2942;--steel:#3d6a94;--teal:#0e8f9e;--teal-d:#0a6b77;--line:#dce5ee;}
+  *{box-sizing:border-box;} body{margin:0;background:var(--bg);color:var(--ink);font-family:"Source Sans 3",-apple-system,system-ui,sans-serif;font-size:17px;line-height:1.62;}
+  .wrap{max-width:720px;margin:0 auto;padding:0 24px;}
+  .serif{font-family:"Fraunces",Georgia,serif;}
+  header{background:linear-gradient(180deg,#e7eef5,var(--bg));border-bottom:4px solid var(--navy);padding:44px 24px 30px;}
+  .brandrow{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .mark{width:44px;height:44px;border-radius:11px;background:linear-gradient(150deg,var(--navy),var(--teal-d));display:grid;place-items:center;color:#fff;font-family:"Fraunces",serif;font-weight:600;font-size:22px;}
+  .brandrow span{font-weight:700;letter-spacing:1.2px;color:var(--navy);font-size:12.5px;text-transform:uppercase;}
+  h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(28px,6vw,40px);margin:0 0 6px;color:var(--navy-d);}
+  .sub{color:var(--teal-d);font-weight:600;margin:0;}
+  .for{font-size:13.5px;color:var(--muted);margin-top:12px;}
+  h2{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(20px,4.5vw,26px);margin:26px 0 8px;color:var(--navy-d);border-bottom:2px solid var(--line);padding-bottom:5px;}
+  p{margin:11px 0;} ul{padding-left:20px;} li{margin:8px 0;}
+  .lead{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:8px;padding:16px 20px;margin:20px 0;}
+  .num{display:flex;gap:14px;align-items:flex-start;margin:13px 0;}
+  .num .n{flex:none;width:30px;height:30px;border-radius:8px;background:var(--navy);color:#fff;font-family:"Fraunces",serif;font-weight:600;display:grid;place-items:center;font-size:15px;}
+  .num b{color:var(--navy-d);} .num span{color:var(--muted);font-size:15.5px;}
+  .want{background:rgba(15,58,95,.06);border-radius:10px;padding:16px 20px;margin:16px 0;}
+  .want b{color:var(--navy-d);}
+  .note{background:rgba(14,143,158,.08);border-left:4px solid var(--teal);border-radius:8px;padding:14px 18px;margin:18px 0;font-size:15px;color:var(--muted);}
+  .note b{color:var(--navy-d);}
+  footer{background:var(--navy-d);color:#9db6cc;text-align:center;padding:26px 24px;font-size:13.5px;margin-top:30px;}
+  footer .b{font-family:"Fraunces",serif;color:#fff;display:block;margin-bottom:3px;}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brandrow"><span class="mark">R</span><span>RadAssist &middot; RGF Global Ventures</span></div>
+  <h1 class="serif">Testing &amp; training guide</h1>
+  <p class="sub">CT Cardiac Calcium Score pilot</p>
+  <p class="for">Prepared for Dr. Luis Ramos</p>
+</div></header>
+<div class="wrap">
+  <div class="lead">This tool turns your calcium-score inputs into a <b>complete, ready-to-paste report</b> — the exact loop you showed us: per-vessel Agatston scores &rarr; total &rarr; MESA percentile &rarr; finished report text. It runs entirely in your browser and sends nothing.</div>
+
+  <h2 class="serif">What it does, and doesn't</h2>
+  <p>It handles the pre-cognitive work: the math, the percentile, and the report boilerplate. It does <b>not</b> read from Exa or write into your report automatically (that is the next phase), and it does <b>not</b> interpret images. You are the radiologist.</p>
+
+  <h2 class="serif">How to use it</h2>
+  <div class="num"><div class="n">1</div><div><b>Enter the four vessel scores</b> <span>— Left Main, LAD, LCx, RCA. Or, if you have the aggregate, use the Total field.</span></div></div>
+  <div class="num"><div class="n">2</div><div><b>Enter the patient factors</b> <span>— Age (45–84), Gender, Race/Ethnicity (White, African-American, Hispanic, Chinese).</span></div></div>
+  <div class="num"><div class="n">3</div><div><b>Click Generate</b> <span>— you get the total, the MESA percentile, the probability of non-zero calcium, and the full report.</span></div></div>
+  <div class="num"><div class="n">4</div><div><b>Click Copy</b> <span>— paste the report into your system.</span></div></div>
+
+  <h2 class="serif">Please run these tests</h2>
+  <ul>
+    <li><b>A normal case</b> — a typical read from your day. Does the report match how you would write it?</li>
+    <li><b>Zero calcium</b> (all vessels 0) — does the impression read correctly?</li>
+    <li><b>Total-only entry</b> — enter just a total; confirm it does not invent vessel numbers.</li>
+    <li><b>Out-of-range age</b> (try 40 or 90) — confirm it warns the MESA percentile is valid only 45–84.</li>
+    <li><b>Percentile check</b> — compare its percentile to the official MESA tool for the same inputs. They should match.</li>
+    <li><b>The wording</b> — read the boilerplate (TECHNIQUE, BACKGROUND). How close is it to your real template?</li>
+  </ul>
+
+  <div class="want"><b>What we most want your eyes on:</b> percentile accuracy vs. your MESA tool; whether the report is paste-ready or needs wording changes; your <b>exact template language</b> (we drafted from your screenshots — tell us the precise wording and we will match it); and anything missing or slow.</div>
+
+  <h2 class="serif">Known limits (this pilot, on purpose)</h2>
+  <ul>
+    <li>MESA percentile is valid for <b>ages 45–84</b> and the four ethnicity categories — the MESA tool's own limits.</li>
+    <li>Boilerplate wording is our <b>best draft from your screenshots</b>; nailing your exact template text is a main goal of this test.</li>
+    <li><b>Standalone only</b> — no Exa read/write yet. That is the next phase.</li>
+  </ul>
+
+  <h2 class="serif">How to send feedback</h2>
+  <p>Inside the tool there is a <b>Feedback</b> button. Note what worked, what didn't, any wording to change, and anything missing, then <b>Copy</b> it (or use the email button) and send it to <b>Rick</b>. Your notes go straight to Rick, and we turn them into the next version.</p>
+
+  <div class="note">RadAssist runs locally and stores nothing. This guide and the tool contain no patient health information. Questions go to Rick, and Rick brings them to us.</div>
+</div>
+<footer><div class="wrap"><span class="b serif">RGF Global Ventures</span>Prepared for Dr. Luis Ramos.</div></footer>
+</body>
+</html>
